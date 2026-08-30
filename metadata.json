@@ -1,0 +1,6 @@
+{
+  "name": "Deeni Tutor",
+  "description": "Online tutoring marketplace connecting qualified Bangladeshi madrasa and Arabic teachers with students and parents worldwide.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
