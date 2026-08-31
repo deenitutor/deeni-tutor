@@ -9,7 +9,7 @@ import { DeeniLogoIcon } from '@/components/shared/DeeniLogo';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { signIn, loginAsDemo, isSupabaseActive } = useAuth();
+  const { signIn, isSupabaseActive } = useAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,23 +26,17 @@ export default function LoginPage() {
     setIsSubmitting(false);
 
     if (res.success) {
-      if (email.includes('teacher')) {
-        router.push('/teacher/dashboard');
-      } else if (email.includes('admin')) {
+      const lowerEmail = email.toLowerCase().trim();
+      if (lowerEmail === 'deenitutor@gmail.com' || lowerEmail.includes('admin')) {
         router.push('/admin/dashboard');
+      } else if (lowerEmail.includes('teacher') || lowerEmail.includes('ustadh') || lowerEmail.includes('mawlana')) {
+        router.push('/teacher/dashboard');
       } else {
         router.push('/student/dashboard');
       }
     } else {
       setErrorMsg(res.error || 'Failed to sign in. Please verify your credentials.');
     }
-  };
-
-  const handleQuickDemo = (role: 'student' | 'teacher' | 'admin') => {
-    loginAsDemo(role);
-    if (role === 'teacher') router.push('/teacher/dashboard');
-    else if (role === 'admin') router.push('/admin/dashboard');
-    else router.push('/student/dashboard');
   };
 
   return (
@@ -137,37 +131,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Quick Demo Access Bar */}
-          <div className="pt-4 border-t border-slate-100">
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider text-center mb-3">
-              Instant Demo Access
-            </p>
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                type="button"
-                onClick={() => handleQuickDemo('student')}
-                className="py-2 px-2 text-xs font-bold bg-[#FAF9F5] hover:bg-[#E8F5EF] text-[#0F2A43] border border-slate-200 rounded-lg transition-colors text-center cursor-pointer"
-              >
-                Student
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickDemo('teacher')}
-                className="py-2 px-2 text-xs font-bold bg-[#FAF9F5] hover:bg-[#E8F5EF] text-[#0F2A43] border border-slate-200 rounded-lg transition-colors text-center cursor-pointer"
-              >
-                Teacher
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickDemo('admin')}
-                className="py-2 px-2 text-xs font-bold bg-[#FAF9F5] hover:bg-[#E8F5EF] text-[#0F2A43] border border-slate-200 rounded-lg transition-colors text-center cursor-pointer"
-              >
-                Admin
-              </button>
-            </div>
-          </div>
-
-          <div className="text-center text-xs text-slate-500 pt-2">
+          <div className="text-center text-xs text-slate-500 pt-2 border-t border-slate-100">
             Don&apos;t have an account yet?{' '}
             <Link href="/signup" className="text-[#16845B] font-bold hover:underline">
               Create an Account

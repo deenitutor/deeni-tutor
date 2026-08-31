@@ -23,7 +23,7 @@ import {
   Sparkles,
   BookOpen
 } from 'lucide-react';
-import { MOCK_TEACHERS } from '@/lib/mock-data';
+import { adminService } from '@/lib/admin-service';
 import { useAuth } from '@/features/auth/AuthContext';
 import { COMMON_TIMEZONES, generateTeacherSlots, SlotItem, DaySlotsGroup } from '@/lib/timezone';
 import { bookingService } from '@/lib/booking-service';
@@ -34,7 +34,20 @@ export default function TeacherProfilePage() {
   const { user } = useAuth();
   const slug = params?.slug as string;
 
-  const teacher = MOCK_TEACHERS.find(t => t.slug === slug) || MOCK_TEACHERS[0];
+  const [allTeachers, setAllTeachers] = useState(() => adminService.getTeachers());
+
+  useEffect(() => {
+    const handleSync = () => setAllTeachers(adminService.getTeachers());
+    window.addEventListener('deenitutor:admin-sync', handleSync);
+    return () => window.removeEventListener('deenitutor:admin-sync', handleSync);
+  }, []);
+
+  const teacher = useMemo(() => {
+    return allTeachers.find(t => t.slug === slug || t.id === slug) || allTeachers[0];
+  }, [allTeachers, slug]);
+
+  const isOwnerOrAdmin = user?.role === 'admin' || user?.id === teacher?.id || user?.email?.includes('teacher');
+  const isApproved = teacher?.is_approved;
 
   // State
   const [studentTimezone, setStudentTimezone] = useState<string>(user?.timezone || 'Europe/London');
@@ -162,6 +175,31 @@ export default function TeacherProfilePage() {
             <span>Back to Teacher Directory</span>
           </Link>
         </div>
+
+        {/* Unapproved Notice Banner */}
+        {!isApproved && (
+          <div className="mb-6 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+            <div className="flex items-center gap-3">
+              <AlertCircle className="w-5 h-5 text-amber-600 shrink-0" />
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider text-amber-800">
+                  Profile Pending Administrative Approval (is_approved = false)
+                </p>
+                <p className="text-xs text-amber-700">
+                  This teacher profile is currently hidden from the public directory until reviewed and approved by a Deeni Tutor Administrator.
+                </p>
+              </div>
+            </div>
+            {user?.role === 'admin' && (
+              <Link
+                href="/admin/applications"
+                className="px-3.5 py-1.5 bg-[#0F2A43] hover:bg-[#163C5F] text-white text-xs font-bold rounded-lg shrink-0 text-center"
+              >
+                Review in Admin Queue
+              </Link>
+            )}
+          </div>
+        )}
 
         {/* Profile Main Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

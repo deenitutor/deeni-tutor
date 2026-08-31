@@ -8,11 +8,8 @@ import {
   Menu, 
   X, 
   User, 
-  ShieldCheck, 
   GraduationCap, 
-  LogOut, 
-  Sparkles,
-  ChevronDown
+  LogOut 
 } from 'lucide-react';
 import { useAuth } from '@/features/auth/AuthContext';
 import { DeeniLogoIcon } from '@/components/shared/DeeniLogo';
@@ -20,9 +17,8 @@ import NotificationDropdown from '@/components/shared/NotificationDropdown';
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { user, signOut, loginAsDemo } = useAuth();
+  const { user, signOut } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [demoDropdownOpen, setDemoDropdownOpen] = useState(false);
 
   const navLinks = [
     { name: 'Find Teachers', href: '/teachers' },
@@ -41,64 +37,6 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-[#E2E8F0] shadow-xs">
-      {/* Top Notification / Demo Bar */}
-      <div className="bg-[#0F2A43] text-[#F7F5EF] text-xs py-1.5 px-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1 bg-[#16845B] text-white px-2 py-0.5 rounded-full font-medium text-[11px]">
-              <ShieldCheck className="w-3 h-3" /> 100% Verified
-            </span>
-            <span className="hidden sm:inline text-slate-300">
-              Direct connection with Bangladesh&apos;s leading Madrasa &amp; Arabic scholars
-            </span>
-          </div>
-
-          {/* Quick Demo Role Switcher */}
-          <div className="relative">
-            <button
-              onClick={() => setDemoDropdownOpen(!demoDropdownOpen)}
-              className="flex items-center gap-1.5 text-xs text-[#D9A441] hover:text-amber-300 font-medium cursor-pointer transition-colors"
-            >
-              <Sparkles className="w-3 h-3" />
-              <span>{user ? `Active: ${user.role.toUpperCase()}` : 'Quick Demo Role'}</span>
-              <ChevronDown className="w-3 h-3" />
-            </button>
-
-            {demoDropdownOpen && (
-              <div 
-                className="absolute right-0 mt-2 w-52 bg-white text-[#16202A] rounded-xl shadow-xl border border-slate-200 py-2 z-50 animate-in fade-in slide-in-from-top-2"
-                onMouseLeave={() => setDemoDropdownOpen(false)}
-              >
-                <div className="px-3 py-1.5 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-                  Switch Demo Account
-                </div>
-                <button
-                  onClick={() => { loginAsDemo('student'); setDemoDropdownOpen(false); }}
-                  className="w-full text-left px-3 py-2 text-xs hover:bg-[#F7F5EF] flex items-center justify-between"
-                >
-                  <span className="font-medium">Student (Tariq - UK)</span>
-                  <span className="text-[10px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">Student</span>
-                </button>
-                <button
-                  onClick={() => { loginAsDemo('teacher'); setDemoDropdownOpen(false); }}
-                  className="w-full text-left px-3 py-2 text-xs hover:bg-[#F7F5EF] flex items-center justify-between"
-                >
-                  <span className="font-medium">Teacher (Mawlana Abdullah)</span>
-                  <span className="text-[10px] bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded">Teacher</span>
-                </button>
-                <button
-                  onClick={() => { loginAsDemo('admin'); setDemoDropdownOpen(false); }}
-                  className="w-full text-left px-3 py-2 text-xs hover:bg-[#F7F5EF] flex items-center justify-between"
-                >
-                  <span className="font-medium">Admin Portal</span>
-                  <span className="text-[10px] bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded">Admin</span>
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
       {/* Main Navbar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">

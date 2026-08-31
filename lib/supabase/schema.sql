@@ -312,9 +312,13 @@ ALTER TABLE public.favourites ENABLE ROW LEVEL SECURITY;
 CREATE OR REPLACE FUNCTION public.is_admin()
 RETURNS BOOLEAN AS $$
 BEGIN
-    RETURN EXISTS (
-        SELECT 1 FROM public.profiles
-        WHERE user_id = auth.uid() AND role = 'admin'
+    RETURN (
+        (auth.jwt() ->> 'email' = 'deenitutor@gmail.com')
+        OR
+        EXISTS (
+            SELECT 1 FROM public.profiles
+            WHERE user_id = auth.uid() AND role = 'admin'
+        )
     );
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -551,3 +555,35 @@ INSERT INTO public.subjects (id, name, category, description) VALUES
 INSERT INTO public.subjects (id, name, category, description) VALUES
     ('arabic-conversation', 'Spoken Arabic Conversation', 'arabic', 'Practical daily conversation skills for travel, work, or conversational fluency.')
     ON CONFLICT (id) DO NOTHING;
+
+-- ====================================================================
+-- SUPER ADMIN ROLE & PERMISSIONS MIGRATION (deenitutor@gmail.com)
+-- ====================================================================
+
+-- 1. Automatically update profiles role to 'admin' whenever deenitutor@gmail.com registers or updates
+UPDATE public.profiles
+SET role = 'admin', full_name = COALESCE(full_name, 'Super Administrator')
+WHERE user_id IN (
+    SELECT id FROM auth.users WHERE LOWER(email) = 'deenitutor@gmail.com'
+);
+
+-- 2. Trigger to ensure future syncs always maintain role = 'admin' for superadmin email
+CREATE OR REPLACE FUNCTION public.handle_superadmin_role_sync()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF LOWER(NEW.email) = 'deenitutor@gmail.com' THEN
+        INSERT INTO public.profiles (user_id, full_name, role, country, timezone)
+        VALUES (NEW.id, 'Super Administrator', 'admin', 'Bangladesh', 'Asia/Dhaka')
+        ON CONFLICT (user_id) DO UPDATE
+        SET role = 'admin';
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS on_superadmin_user_created ON auth.users;
+CREATE TRIGGER on_superadmin_user_created
+    AFTER INSERT OR UPDATE OF email ON auth.users
+    FOR EACH ROW
+    EXECUTE FUNCTION public.handle_superadmin_role_sync();
+

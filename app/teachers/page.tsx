@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, Suspense } from 'react';
+import React, { useState, useMemo, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { 
   Search, 
@@ -12,7 +12,9 @@ import {
   ShieldCheck, 
   Check 
 } from 'lucide-react';
-import { MOCK_TEACHERS, POPULAR_SUBJECTS } from '@/lib/mock-data';
+import { POPULAR_SUBJECTS } from '@/lib/mock-data';
+import { adminService } from '@/lib/admin-service';
+import { TeacherProfile } from '@/types/teacher';
 import TeacherCard from '@/components/shared/TeacherCard';
 
 function TeacherDirectoryContent() {
@@ -20,6 +22,7 @@ function TeacherDirectoryContent() {
   const initialSubject = searchParams.get('subject') || '';
   const initialMaxPrice = searchParams.get('maxPrice') || '';
 
+  const [allTeachers, setAllTeachers] = useState<TeacherProfile[]>(() => adminService.getTeachers());
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSubject, setSelectedSubject] = useState(initialSubject);
   const [selectedLevel, setSelectedLevel] = useState<string>('all');
@@ -31,9 +34,15 @@ function TeacherDirectoryContent() {
   const [sortBy, setSortBy] = useState<'recommended' | 'rating' | 'price_low' | 'price_high' | 'experience'>('recommended');
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
+  useEffect(() => {
+    const handleSync = () => setAllTeachers(adminService.getTeachers());
+    window.addEventListener('deenitutor:admin-sync', handleSync);
+    return () => window.removeEventListener('deenitutor:admin-sync', handleSync);
+  }, []);
+
   const filteredTeachers = useMemo(() => {
-    return MOCK_TEACHERS.filter((teacher) => {
-      // Must be approved for public directory
+    return allTeachers.filter((teacher) => {
+      // Must be approved by Admin for public directory display
       if (!teacher.is_approved) {
         return false;
       }
@@ -106,7 +115,7 @@ function TeacherDirectoryContent() {
       if (sortBy === 'experience') return b.years_of_experience - a.years_of_experience;
       return (b.featured ? 1 : 0) - (a.featured ? 1 : 0); // Recommended
     });
-  }, [searchQuery, selectedSubject, selectedLevel, selectedCity, selectedGender, maxPrice, selectedLanguage, verifiedOnly, sortBy]);
+  }, [allTeachers, searchQuery, selectedSubject, selectedLevel, selectedCity, selectedGender, maxPrice, selectedLanguage, verifiedOnly, sortBy]);
 
   const resetFilters = () => {
     setSearchQuery('');

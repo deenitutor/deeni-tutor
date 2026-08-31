@@ -208,10 +208,61 @@ export default function TeacherRegisterPage() {
     setIsSubmitting(true);
 
     try {
-      // If user not signed in, create auth account
+      // 1. If user not signed in, create auth account
       if (!user && password) {
         await signUp(email, password, fullName, 'teacher');
       }
+
+      // 2. Persist application profile in admin store / Supabase with is_approved: false
+      const newTeacherApplication: TeacherProfile = {
+        id: user?.id || `tch-${Date.now()}`,
+        slug: `${fullName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`,
+        full_name: fullName,
+        title: `${qualifications[0] || 'Islamic Scholar'} - ${institution}`,
+        photo_url: photoUrl,
+        gender,
+        city,
+        district,
+        country: 'Bangladesh',
+        madrasa_institution: institution,
+        qualifications,
+        certificates: qualifications.slice(1),
+        years_of_experience: yearsOfExp,
+        total_lessons: 0,
+        rating: 5.0,
+        review_count: 0,
+        hourly_rate: hourlyRate,
+        trial_rate: trialRate,
+        trial_available: true,
+        trial_duration_minutes: 30,
+        bio: bio || `Assalamu Alaikum. I am ${fullName}, graduated from ${institution}. I teach ${selectedSubjects.join(', ')}.`,
+        about_teaching: aboutTeaching || 'I focus on clear step-by-step guidance in classical Arabic and Quranic recitation.',
+        subjects: selectedSubjects,
+        levels: selectedLevels,
+        teaching_languages: selectedLanguages,
+        timezone: timezone,
+        verification_status: 'under_review',
+        is_verified: false,
+        is_approved: false, // Default false until admin approves
+        featured: false,
+        video_url: introVideoUrl || undefined,
+        documents: documents.map((d, i) => ({
+          id: `doc-${Date.now()}-${i}`,
+          teacher_id: user?.id || `tch-${Date.now()}`,
+          document_type: d.type,
+          title: d.title,
+          file_url: d.fileUrl,
+          file_name: d.fileName,
+          status: 'pending',
+          created_at: new Date().toISOString()
+        })),
+        reviews: []
+      };
+
+      // Add to admin registry
+      const existingTeachers = adminService.getTeachers();
+      const updatedList = [newTeacherApplication, ...existingTeachers.filter(t => t.id !== newTeacherApplication.id)];
+      adminService.saveTeachers(updatedList);
 
       setIsSubmitting(false);
       setIsSubmitted(true);

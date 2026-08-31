@@ -20,7 +20,6 @@ import {
   X,
   ExternalLink,
   ChevronRight,
-  Sparkles,
   Lock
 } from 'lucide-react';
 import { useAuth } from '@/features/auth/AuthContext';
@@ -33,7 +32,7 @@ interface AdminLayoutProps {
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const pathname = usePathname();
-  const { user, loginAsDemo } = useAuth();
+  const { user } = useAuth();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const adminNavItems = [
@@ -85,16 +84,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               <span>Public Directory</span>
               <ExternalLink className="w-3 h-3" />
             </Link>
-
-            {!isRoleAdmin && (
-              <button
-                onClick={() => loginAsDemo('admin')}
-                className="flex items-center gap-1.5 px-3 py-1 bg-[#D9A441] hover:bg-amber-400 text-[#0F2A43] font-bold rounded-lg transition-all shadow-xs cursor-pointer"
-              >
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Switch to Admin Role</span>
-              </button>
-            )}
           </div>
         </div>
       </div>
@@ -198,27 +187,46 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
         {/* Main Content Area */}
         <main className="flex-1 min-w-0 space-y-6">
-          {!isRoleAdmin && (
-            <div className="bg-amber-50 border border-amber-200 p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-amber-900">
-              <div className="flex items-center gap-2.5">
-                <Lock className="w-5 h-5 text-amber-700 shrink-0" />
-                <div>
-                  <p className="font-bold">Role Preview Notice</p>
-                  <p className="text-amber-800">
-                    You are currently logged in as <span className="font-bold uppercase">{user?.role || 'Guest'}</span>. Switch to Admin mode for full privileged actions.
-                  </p>
-                </div>
+          {!isRoleAdmin ? (
+            <div className="bg-white border border-slate-200 p-8 sm:p-12 rounded-2xl shadow-xs text-center max-w-xl mx-auto my-12 space-y-6">
+              <div className="w-16 h-16 bg-rose-50 border border-rose-200 text-rose-600 rounded-2xl flex items-center justify-center mx-auto shadow-xs">
+                <Lock className="w-8 h-8" />
               </div>
-              <button
-                onClick={() => loginAsDemo('admin')}
-                className="px-3 py-1.5 bg-[#0F2A43] hover:bg-[#163C5F] text-white font-bold rounded-lg shrink-0 cursor-pointer"
-              >
-                Switch to Admin Demo
-              </button>
-            </div>
-          )}
+              <div className="space-y-2">
+                <h2 className="text-xl font-bold text-[#0F2A43]">Super Admin Authentication Required</h2>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  This console is restricted strictly to authorized platform administrators. You are currently {user ? (
+                    <>logged in as <span className="font-bold text-[#0F2A43] uppercase">{user.role} ({user.email})</span>.</>
+                  ) : (
+                    'not logged in.'
+                  )}
+                </p>
+              </div>
 
-          {children}
+              <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-600 text-left space-y-1">
+                <p className="font-bold text-[#0F2A43]">Super Admin Account:</p>
+                <p>Email: <span className="font-mono font-semibold text-[#16845B]">deenitutor@gmail.com</span></p>
+                <p>Role: <span className="font-mono font-semibold text-purple-700">admin (Super Admin)</span></p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                <Link
+                  href="/login"
+                  className="w-full sm:w-auto px-6 py-2.5 bg-[#0F2A43] hover:bg-[#163C5F] text-white text-sm font-bold rounded-xl shadow-xs transition-all text-center"
+                >
+                  Sign In as Super Admin
+                </Link>
+                <Link
+                  href="/"
+                  className="w-full sm:w-auto px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold rounded-xl transition-all text-center"
+                >
+                  Return Home
+                </Link>
+              </div>
+            </div>
+          ) : (
+            children
+          )}
         </main>
 
       </div>

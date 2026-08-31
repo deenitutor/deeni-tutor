@@ -3,6 +3,7 @@ import './globals.css';
 import { AuthProvider } from '@/features/auth/AuthContext';
 import Navbar from '@/components/shared/Navbar';
 import Footer from '@/components/shared/Footer';
+import BottomNav from '@/components/shared/BottomNav';
 
 export const metadata: Metadata = {
   title: 'Deeni Tutor — Online Arabic & Quran Tutoring Marketplace',
@@ -25,10 +26,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen flex flex-col bg-white text-[#16202A] antialiased" suppressHydrationWarning>
         <AuthProvider>
           <Navbar />
-          <main className="flex-1">
+          <main className="flex-1 pb-16 md:pb-0">
             {children}
           </main>
           <Footer />
+          <BottomNav />
         </AuthProvider>
       </body>
     </html>

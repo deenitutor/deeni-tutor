@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Mail, Phone, MapPin, CheckCircle2, MessageSquare, Clock, Globe } from 'lucide-react';
+import { Mail, Phone, MapPin, CheckCircle2, MessageSquare, Clock, Globe, ArrowRight, MessageCircle } from 'lucide-react';
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -34,8 +34,53 @@ export default function ContactPage() {
             Contact Deeni Tutor Support
           </h1>
           <p className="text-sm sm:text-base text-slate-600">
-            Have questions about finding a teacher, booking a trial lesson, or applying as an Arabic educator? Reach out to our dedicated team.
+            Have questions about finding a teacher, booking a trial lesson, or applying as an Arabic educator? Reach out to our dedicated team via WhatsApp, Email, or the form below.
           </p>
+        </div>
+
+        {/* Quick Contact Highlight Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
+          {/* WhatsApp Direct */}
+          <a
+            href="https://wa.me/8801897174887"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-between p-5 bg-white hover:bg-emerald-50/50 border border-emerald-200 rounded-2xl shadow-xs transition-all group"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-emerald-500 text-white flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform">
+                <MessageCircle className="w-6 h-6" />
+              </div>
+              <div>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700 block">Instant Chat</span>
+                <span className="text-base font-bold text-[#0F2A43] group-hover:text-emerald-700 transition-colors">
+                  WhatsApp: 01897174887
+                </span>
+                <span className="text-xs text-slate-500 block">Fastest response for urgent queries & lessons</span>
+              </div>
+            </div>
+            <ArrowRight className="w-5 h-5 text-emerald-600 group-hover:translate-x-1 transition-transform" />
+          </a>
+
+          {/* Email Direct */}
+          <a
+            href="mailto:deenitutor@gmail.com"
+            className="flex items-center justify-between p-5 bg-white hover:bg-amber-50/50 border border-amber-200 rounded-2xl shadow-xs transition-all group"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-[#0F2A43] text-[#D9A441] flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform">
+                <Mail className="w-6 h-6" />
+              </div>
+              <div>
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#0F2A43] block">Official Email</span>
+                <span className="text-base font-bold text-[#0F2A43] group-hover:text-[#16845B] transition-colors">
+                  deenitutor@gmail.com
+                </span>
+                <span className="text-xs text-slate-500 block">For support, verifications & inquiries</span>
+              </div>
+            </div>
+            <ArrowRight className="w-5 h-5 text-[#0F2A43] group-hover:translate-x-1 transition-transform" />
+          </a>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
@@ -46,23 +91,43 @@ export default function ContactPage() {
               <span className="text-xs font-bold text-[#D9A441] uppercase tracking-wider">Direct Reach</span>
               <h2 className="text-xl font-bold text-white mt-1">Get in Touch</h2>
               <p className="text-xs text-slate-300 mt-2 leading-relaxed">
-                Our support team responds to all inquiries within 12 hours.
+                Our support team responds promptly to all inquiries from students, parents, and teachers.
               </p>
             </div>
 
-            <div className="space-y-4 text-xs text-slate-200">
+            <div className="space-y-5 text-xs text-slate-200">
+              {/* WhatsApp Item */}
               <div className="flex items-start gap-3">
-                <Mail className="w-4 h-4 text-[#D9A441] shrink-0 mt-0.5" />
+                <MessageCircle className="w-5 h-5 text-[#25D366] shrink-0 mt-0.5" />
                 <div>
-                  <span className="font-bold block text-white">Email Us:</span>
-                  <a href="mailto:support@deenitutor.com" className="hover:underline text-slate-300">
-                    support@deenitutor.com
+                  <span className="font-bold block text-white">WhatsApp Support:</span>
+                  <a
+                    href="https://wa.me/8801897174887"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline text-[#25D366] font-semibold text-sm inline-flex items-center gap-1 mt-0.5"
+                  >
+                    01897174887 (wa.me)
+                  </a>
+                </div>
+              </div>
+
+              {/* Email Item */}
+              <div className="flex items-start gap-3">
+                <Mail className="w-5 h-5 text-[#D9A441] shrink-0 mt-0.5" />
+                <div>
+                  <span className="font-bold block text-white">Official Email:</span>
+                  <a 
+                    href="mailto:deenitutor@gmail.com" 
+                    className="hover:underline text-slate-200 font-semibold text-sm inline-flex items-center gap-1 mt-0.5"
+                  >
+                    deenitutor@gmail.com
                   </a>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <Clock className="w-4 h-4 text-[#D9A441] shrink-0 mt-0.5" />
+                <Clock className="w-5 h-5 text-[#D9A441] shrink-0 mt-0.5" />
                 <div>
                   <span className="font-bold block text-white">Office Hours:</span>
                   <span>7 Days a week (9:00 AM – 11:00 PM Asia/Dhaka)</span>
@@ -70,7 +135,7 @@ export default function ContactPage() {
               </div>
 
               <div className="flex items-start gap-3">
-                <MapPin className="w-4 h-4 text-[#D9A441] shrink-0 mt-0.5" />
+                <MapPin className="w-5 h-5 text-[#D9A441] shrink-0 mt-0.5" />
                 <div>
                   <span className="font-bold block text-white">Location:</span>
                   <span>Dhanmondi, Dhaka-1205, Bangladesh</span>
@@ -78,7 +143,7 @@ export default function ContactPage() {
               </div>
 
               <div className="flex items-start gap-3">
-                <Globe className="w-4 h-4 text-[#D9A441] shrink-0 mt-0.5" />
+                <Globe className="w-5 h-5 text-[#D9A441] shrink-0 mt-0.5" />
                 <div>
                   <span className="font-bold block text-white">Global Communities:</span>
                   <span>UK, USA, Canada, UAE, Australia, Malaysia</span>
@@ -106,7 +171,7 @@ export default function ContactPage() {
                 </div>
                 <h3 className="text-xl font-bold text-[#0F2A43]">Message Received!</h3>
                 <p className="text-xs text-slate-600 max-w-md mx-auto leading-relaxed">
-                  Jazakallah Khair for reaching out. One of our student advisors will review your message and respond to <span className="font-bold text-[#0F2A43]">{formData.email}</span> within a few hours.
+                  Jazakallah Khair for reaching out. One of our student advisors will review your message and respond to <span className="font-bold text-[#0F2A43]">{formData.email}</span> promptly. For immediate assistance, you can also chat on WhatsApp at <a href="https://wa.me/8801897174887" target="_blank" rel="noopener noreferrer" className="text-[#16845B] font-bold underline">01897174887</a>.
                 </p>
                 <button
                   onClick={() => { setSubmitted(false); setFormData({ name: '', email: '', subject: 'General Question', message: '' }); }}
@@ -117,9 +182,12 @@ export default function ContactPage() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
-                <h3 className="text-xl font-bold text-[#0F2A43]">
-                  Send a Message
-                </h3>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xl font-bold text-[#0F2A43]">
+                    Send a Message
+                  </h3>
+                  <span className="text-xs text-slate-500">We reply in &lt; 12 hours</span>
+                </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
@@ -198,3 +266,4 @@ export default function ContactPage() {
     </div>
   );
 }
+

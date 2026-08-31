@@ -33,13 +33,25 @@ export default function Footer() {
               <span>Rigorous 4-tier verification for all Dawra-e-Hadith &amp; university scholars.</span>
             </div>
 
-            <div className="pt-2 text-xs text-slate-400 space-y-1">
+            <div className="pt-2 text-xs text-slate-300 space-y-2">
               <div className="flex items-center gap-2">
-                <Globe className="w-3.5 h-3.5 text-slate-300" />
-                <span>Serving students across UK, USA, Canada, UAE, Europe &amp; Australia</span>
+                <Mail className="w-3.5 h-3.5 text-[#D9A441]" />
+                <a href="mailto:deenitutor@gmail.com" className="hover:text-white transition-colors">
+                  deenitutor@gmail.com
+                </a>
               </div>
               <div className="flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5 text-slate-300" />
+                <Phone className="w-3.5 h-3.5 text-[#25D366]" />
+                <a href="https://wa.me/8801897174887" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-300 text-emerald-400 font-medium transition-colors">
+                  WhatsApp: 01897174887
+                </a>
+              </div>
+              <div className="flex items-center gap-2 text-slate-400">
+                <Globe className="w-3.5 h-3.5 text-slate-400" />
+                <span>Serving UK, USA, Canada, UAE, Europe &amp; Australia</span>
+              </div>
+              <div className="flex items-center gap-2 text-slate-400">
+                <MapPin className="w-3.5 h-3.5 text-slate-400" />
                 <span>Dhaka, Bangladesh — Worldwide Operations</span>
               </div>
             </div>
